@@ -31,7 +31,7 @@ glimpse(data)
 
 #Things I Can't Figure out:  I can't figure out how to clean up the names of the offense categories easily.
 #Not sure why his graph doesn't have traffic accidents
-#Not sure how to get the error bars to look like his - no line in middle
+
 
 crime_percent <- data %>%
   count(offense_category_id) %>%
@@ -40,9 +40,9 @@ crime_percent <- data %>%
 
 crime_percent %>%
  ggplot(aes(fct_reorder(offense_category_id, Percent), Percent)) +
+  geom_errorbar(aes(ymin = Percent + qnorm(0.025)*prop_se,
+                    ymax = Percent + qnorm(0.975)*prop_se)) +
   geom_point(color = "cornflower blue") +
-  geom_errorbar(aes(ymin = Percent - 1.96*prop_se,
-                    ymax = Percent + 1.96*prop_se)) +
   coord_flip() +
   theme_minimal() +
   scale_y_continuous(labels = scales::percent, limits = c(NA, .3)) +
@@ -54,6 +54,8 @@ crime_percent %>%
 ```
 
 
-```{r }
+```{r Question 2 Same Relationship Different Uncertainty Visualization}
+
+
 
 ```
