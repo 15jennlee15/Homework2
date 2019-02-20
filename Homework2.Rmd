@@ -17,15 +17,39 @@ library(here)
 library(ggrepel)
 
 
-data <- import("https://www.kaggle.com/paultimothymooney/denver-crime-data#crime.csv") %>%
+data <- import("https://www.denvergov.org/media/gis/DataCatalog/crime/csv/crime.csv") %>%
   janitor::clean_names()
 
 glimpse(data)
+
 ```
 
 
 
-```{r cars}
+
+```{r Question 1 Replicate Plot}
+
+#Things I Can't Figure out:  I can't figure out how to clean up the names of the offense categories easily.
+#Not sure why his graph doesn't have traffic accidents
+#Not sure how to get the error bars to look like his - no line in middle
+
+crime_percent <- data %>%
+  count(offense_category_id) %>%
+  mutate(Percent = (n/sum(n)),
+         prop_se = (sqrt((Percent*(1-Percent)) / n))) 
+
+crime_percent %>%
+ ggplot(aes(fct_reorder(offense_category_id, Percent), Percent)) +
+  geom_point(color = "cornflower blue") +
+  geom_errorbar(aes(ymin = Percent - 1.96*prop_se,
+                    ymax = Percent + 1.96*prop_se)) +
+  coord_flip() +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent, limits = c(NA, .3)) +
+  labs(x = "",
+       title = "Crimes in Denver",
+       caption = "Denver Crime Data Distributed via Kaggle
+       https://www.kaggle.com/paultimothymooney/denver-crime-data")
 
 ```
 
