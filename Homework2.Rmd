@@ -1,0 +1,35 @@
+---
+title: "Homework 2"
+author: "Jenn Lewis, Karlena Ochoa, Katie Denning"
+date: "2/20/2019"
+output: html_document
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+
+library(gghighlight)
+library(tidyverse)
+library(rio)
+library(here)
+library(ggrepel)
+
+
+data <- import("https://www.kaggle.com/paultimothymooney/denver-crime-data#crime.csv") %>%
+  janitor::clean_names()
+
+glimpse(data)
+```
+
+
+
+```{r cars}
+
+```
+
+
+```{r }
+
+```
