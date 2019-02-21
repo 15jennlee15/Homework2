@@ -59,3 +59,19 @@ crime_percent %>%
 
 
 ```
+
+
+```{r Question 3 Reproduce plot}
+
+```
+
+
+```{r Question 4 Dot Plot }
+
+```
+
+
+```{r Question 5 Reproduce Table }
+
+```
+
