@@ -15,6 +15,8 @@ library(tidyverse)
 library(rio)
 library(here)
 library(ggrepel)
+library(magrittr)
+library(lubridate)
 
 
 data <- import("https://www.denvergov.org/media/gis/DataCatalog/crime/csv/crime.csv") %>%
@@ -63,7 +65,41 @@ crime_percent %>%
 
 ```{r Question 3 Reproduce plot}
 
+# need crime proortion by district and year. Add error bars to proportions. Extract year. 
+
+df3 <- data %>% 
+  select("reported_date", "district_id", "offense_type_id", "offense_category_id") %>% 
+  separate(reported_date, c("year", "delete"), sep = " ") %>% 
+  select(-"delete") %>% 
+  separate(year, c("month", "day", "year"), sep = "/") %>% 
+  select(-"month", -"day")
+  
+
+df3 %<>% 
+  group_by(year, district_id) %>%
+  count(offense_category_id) %>%
+  mutate(prop = (n/sum(n))) %>% 
+  group_by(year, district_id) %>% 
+  summarize(prop = mean(prop))
+
+
+ggplot(df3, aes(as.factor(district_id), prop)) +
+  geom_col(aes(fill = as.factor(district_id))) +
+  coord_flip() +
+  theme_minimal() +
+  facet_wrap(~year) +
+  labs(x = "Proportion",
+       y = "District",
+       title = "Crimes in Denver",
+       caption = "Denver Crime Data Distributed via Kaggle
+       https://www.kaggle.com/paultimothymooney/denver-crime-data") +
+  theme(legend.position = "none")
+
+#proportions are not correct yet, and error bars need to be added. 
+  
+
 ```
+
 
 
 ```{r Question 4 Dot Plot }
