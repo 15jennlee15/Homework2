@@ -81,33 +81,23 @@ df4 <- df3 %>%
   mutate(prop = n / sum(n),
          prop_se = (sqrt((prop*(1-prop)) / n)))
 
-<<<<<<< HEAD
-ggplot(df4, aes(fct_reorder(as.factor(district_id), prop), prop, fill = as.factor(district_id))) +
-  geom_col() +
-   geom_errorbar(aes(ymin = prop + qnorm(0.025)*prop_se,
-                    ymax = prop + qnorm(0.975)*prop_se)) +
-=======
-<<<<<<< HEAD
-=======
-#tring to get props
->>>>>>> 1fcfa34f49d8c8b06dd062e5023e4e1aa4eea808
 
-ggplot(df4, aes(as.factor(district_id), prop)) +
-  geom_col(aes(fill = as.factor(district_id))) +
->>>>>>> master
-  coord_flip() +
+#tring to get props
+ggplot(df4, aes(fct_reorder(as.factor(district_id), prop), prop, fill = as.factor(district_id))) +
+ geom_col() +
+ geom_errorbar(aes(ymin = prop + qnorm(0.025)*prop_se,
+              ymax = prop + qnorm(0.975)*prop_se)) +
+    coord_flip() +
   theme_minimal() +
   facet_wrap(~year) +
-  labs(x = "District",
-       y = "Proportion",
-       title = "Crimes in Denver",
-       caption = "Denver Crime Data Distributed via Kaggle
-       https://www.kaggle.com/paultimothymooney/denver-crime-data") +
+   labs(x = "District",
+        y = "Proportion",
+        title = "Crimes in Denver",
+        caption = "Denver Crime Data Distributed via Kaggle
+        https://www.kaggle.com/paultimothymooney/denver-crime-data") +
   theme(legend.position = "none")
 
-
 #proportions are correct, just need to finish formatting proportion axis and color order 
-  
 
 ```
 
