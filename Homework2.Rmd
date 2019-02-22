@@ -81,10 +81,20 @@ df4 <- df3 %>%
   mutate(prop = n / sum(n),
          prop_se = (sqrt((prop*(1-prop)) / n)))
 
+<<<<<<< HEAD
 ggplot(df4, aes(fct_reorder(as.factor(district_id), prop), prop, fill = as.factor(district_id))) +
   geom_col() +
    geom_errorbar(aes(ymin = prop + qnorm(0.025)*prop_se,
                     ymax = prop + qnorm(0.975)*prop_se)) +
+=======
+<<<<<<< HEAD
+=======
+#tring to get props
+>>>>>>> 1fcfa34f49d8c8b06dd062e5023e4e1aa4eea808
+
+ggplot(df4, aes(as.factor(district_id), prop)) +
+  geom_col(aes(fill = as.factor(district_id))) +
+>>>>>>> master
   coord_flip() +
   theme_minimal() +
   facet_wrap(~year) +
@@ -102,7 +112,7 @@ ggplot(df4, aes(fct_reorder(as.factor(district_id), prop), prop, fill = as.facto
 ```
 
 
-
+Limit your data to the following. Note that only rows corresponding to a crime have been retained, and I have counted the number of rows (crimes) for each district in each year. I have stored this data frame in an object called  counts
 ```{r Question 4 Dot Plot }
 
 ```
