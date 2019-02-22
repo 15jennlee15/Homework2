@@ -3,6 +3,8 @@ title: "Homework 2"
 author: "Jenn Lewis, Karlena Ochoa, Katie Denning"
 date: "2/20/2019"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup}
@@ -17,6 +19,8 @@ library(here)
 library(ggrepel)
 library(magrittr)
 library(lubridate)
+library(psych)
+library(stats)
 
 
 data <- import("https://www.denvergov.org/media/gis/DataCatalog/crime/csv/crime.csv") %>%
@@ -72,7 +76,8 @@ df3 <- data %>%
   separate(reported_date, c("year", "delete"), sep = " ") %>% 
   select(-"delete") %>% 
   separate(year, c("month", "day", "year"), sep = "/") %>% 
-  select(-"month", -"day")
+  select(-"month", -"day") %>% 
+  mutate(year = as.numeric(year))
   
 
 df4 <- df3 %>% 
@@ -80,10 +85,7 @@ df4 <- df3 %>%
   summarise (n = n()) %>%
   mutate(prop = n / sum(n))
 
-<<<<<<< HEAD
-=======
 #tring to get props
->>>>>>> 1fcfa34f49d8c8b06dd062e5023e4e1aa4eea808
 
 ggplot(df4, aes(as.factor(district_id), prop)) +
   geom_col(aes(fill = as.factor(district_id))) +
@@ -105,7 +107,44 @@ ggplot(df4, aes(as.factor(district_id), prop)) +
 
 Limit your data to the following. Note that only rows corresponding to a crime have been retained, and I have counted the number of rows (crimes) for each district in each year. I have stored this data frame in an object called  counts
 ```{r Question 4 Dot Plot }
+#getting data to look like the tibble on the HW
+counts <- df4 %>% 
+  select(-prop)
 
+#model rovided
+m <- glm(n ~ I(factor(district_id)) + I(year - 2014), 
+         data = counts)
+
+#output from model
+tidied <- broom::tidy(m)
+
+#dividing proportions into 20 bins
+ppoints(20)
+
+#
+qnorm(ppoints(20), 
+      mean = tidied$estimate[4],
+      sd = tidied$std.error[4])
+
+prob_df <- data.frame(x = qnorm(ppoints(20), 
+                                    mean = tidied$estimate[4],
+                                    sd = tidied$std.error[4])) %>% 
+  mutate(crime_rate_diff = ifelse(x > 0, "blue", "orange"))
+
+ggplot(prob_df, aes(x)) +
+  geom_dotplot(aes(fill = crime_rate_diff), binwidth = 1300) +
+  geom_vline(xintercept = 0, color = "red4", linetype = 1, size = 1.4) +
+  scale_fill_manual(
+    values = c("orange3","deepskyblue3"),
+    guide = "none") +
+  scale_y_continuous(name = "", 
+                     breaks = NULL) +
+  scale_x_continuous(name = "", 
+                     limits = c(-8000, 2500)) +
+  #theme_dviz_open(20) +
+  scale_y_continuous(breaks = NULL,
+                     name = "") +
+  labs(caption = "Each ball represents 5% probability")
 ```
 
 
