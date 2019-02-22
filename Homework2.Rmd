@@ -83,12 +83,6 @@ df3 %<>%
   summarize(prop = mean(prop))
 
 #tring to get props
-df4 <- df3 %>% 
-group_by(year, district_id) %>%
-  summarise (n = n()) %>%
-  mutate(prop = n / sum(n))
-
-
 
 ggplot(df4, aes(as.factor(district_id), prop)) +
   geom_col(aes(fill = as.factor(district_id))) +
