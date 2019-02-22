@@ -84,10 +84,13 @@ df4 <- df3 %>%
   group_by(year, district_id) %>%
   summarise (n = n()) %>%
   mutate(prop = n / sum(n),
-         prop_se = (sqrt((prop*(1-prop)) / n)))
+         prop_se = (sqrt((prop*(1-prop)) / n)),
+         district_id = as.factor(district_id))
 
 #tring to get props
-ggplot(df4, aes(fct_reorder(as.factor(district_id), prop), prop, fill = as.factor(district_id))) +
+ggplot(df4, aes(fct_reorder(as.factor(district_id), prop), 
+                prop, 
+                fill = district_id)) +
  geom_col() +
  geom_errorbar(aes(ymin = prop + qnorm(0.025)*prop_se,
               ymax = prop + qnorm(0.975)*prop_se)) +
@@ -99,7 +102,16 @@ ggplot(df4, aes(fct_reorder(as.factor(district_id), prop), prop, fill = as.facto
         title = "Crimes in Denver",
         caption = "Denver Crime Data Distributed via Kaggle
         https://www.kaggle.com/paultimothymooney/denver-crime-data") +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  scale_fill_manual(
+    values = c("dodgerblue3", 
+               "gold", 
+               "palevioletred3", 
+               "springgreen4", 
+               "skyblue2", 
+               "darkorange3", 
+               "orange2"),
+    breaks = c("3", "6", "1", "2", "4", "5", "7"))
 
 #proportions are correct, just need to finish formatting proportion axis and color order 
 
@@ -136,7 +148,8 @@ ggplot(prob_df, aes(x)) +
     values = c("steelblue2", "orange2"),
     guide = "none") +
   scale_x_continuous(limits = c(-8000, 2500),
-                     breaks = c(-8000, -6500, -5000, -3500, -2000, -500, 1000, 2500)) +
+                     breaks = c(-8000, -6500, -5000, -3500, 
+                                -2000, -500, 1000, 2500)) +
   #theme_dviz_open(20) +
   scale_y_continuous(breaks = NULL,
                      name = "") +
@@ -145,8 +158,17 @@ ggplot(prob_df, aes(x)) +
        caption = "Each ball represents 5% probability",
        x = "Difference in total number of crimes") +
   theme_minimal() +
-  annotate("text", label = "District 2", x = -6500, y = .5, color = "gray40", size = 8) +
-  annotate("text", label = "District 1", x = 1500, y = .5, color = "gray40", size = 8)
+  annotate("text", 
+           label = "District 2", 
+           x = -6500, y = .5, 
+           color = "gray40", 
+           size = 8) +
+  annotate("text", 
+           label = "District 1", 
+           x = 1500, 
+           y = .5, 
+           color = "gray40", 
+           size = 8)
 ```
 
 
