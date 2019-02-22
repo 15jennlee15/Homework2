@@ -122,30 +122,31 @@ tidied <- broom::tidy(m)
 #dividing proportions into 20 bins
 ppoints(20)
 
-#
-qnorm(ppoints(20), 
-      mean = tidied$estimate[4],
-      sd = tidied$std.error[4])
-
+#Transforming probability according to the crime rate between districts 1 and 4
+#Making this into a dataset with a variable indicating crime rate > 0
 prob_df <- data.frame(x = qnorm(ppoints(20), 
                                     mean = tidied$estimate[4],
                                     sd = tidied$std.error[4])) %>% 
-  mutate(crime_rate_diff = ifelse(x > 0, "blue", "orange"))
+  mutate(crime_rate_diff = ifelse(x > 0, "orange", "blue"))
 
 ggplot(prob_df, aes(x)) +
-  geom_dotplot(aes(fill = crime_rate_diff), binwidth = 1300) +
+  geom_dotplot(aes(fill = crime_rate_diff), binwidth = 1200) +
   geom_vline(xintercept = 0, color = "red4", linetype = 1, size = 1.4) +
   scale_fill_manual(
-    values = c("orange3","deepskyblue3"),
+    values = c("steelblue2", "orange2"),
     guide = "none") +
-  scale_y_continuous(name = "", 
-                     breaks = NULL) +
-  scale_x_continuous(name = "", 
-                     limits = c(-8000, 2500)) +
+  scale_x_continuous(limits = c(-8000, 2500),
+                     breaks = c(-8000, -6500, -5000, -3500, -2000, -500, 1000, 2500)) +
   #theme_dviz_open(20) +
   scale_y_continuous(breaks = NULL,
                      name = "") +
-  labs(caption = "Each ball represents 5% probability")
+  labs(title = "Difference in total number of crimes",
+       subtitle = "District 2 Crimes - District 1 Crimes",
+       caption = "Each ball represents 5% probability",
+       x = "Difference in total number of crimes") +
+  theme_minimal() +
+  annotate("text", label = "District 2", x = -6500, y = .5, color = "gray40", size = 8) +
+  annotate("text", label = "District 1", x = 1500, y = .5, color = "gray40", size = 8)
 ```
 
 
