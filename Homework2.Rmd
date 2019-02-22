@@ -86,11 +86,6 @@ df4 <- df3 %>%
   mutate(prop = n / sum(n),
          prop_se = (sqrt((prop*(1-prop)) / n)))
 
-<<<<<<< HEAD
-#tring to get props
-=======
->>>>>>> be4df083ba37e248a60ba7b462886695a46b7d88
-
 #tring to get props
 ggplot(df4, aes(fct_reorder(as.factor(district_id), prop), prop, fill = as.factor(district_id))) +
  geom_col() +
