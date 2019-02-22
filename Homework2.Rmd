@@ -75,12 +75,10 @@ df3 <- data %>%
   select(-"month", -"day")
   
 
-df3 %<>% 
+df4 <- df3 %>% 
   group_by(year, district_id) %>%
-  count(offense_category_id) %>%
-  mutate(prop = (n/sum(n))) %>% 
-  group_by(year, district_id) %>% 
-  summarize(prop = mean(prop))
+  summarise (n = n()) %>%
+  mutate(prop = n / sum(n))
 
 #tring to get props
 
