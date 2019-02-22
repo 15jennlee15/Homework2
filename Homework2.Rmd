@@ -89,7 +89,6 @@ group_by(year, district_id) %>%
   mutate(prop = n / sum(n))
 
 
-
 ggplot(df4, aes(as.factor(district_id), prop)) +
   geom_col(aes(fill = as.factor(district_id))) +
   coord_flip() +
