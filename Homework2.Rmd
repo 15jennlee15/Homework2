@@ -75,19 +75,15 @@ df3 <- data %>%
   select(-"month", -"day")
   
 
-df3 %<>% 
-  group_by(year, district_id) %>%
-  count(offense_category_id) %>%
-  mutate(prop = (n/sum(n))) %>% 
-  group_by(year, district_id) %>% 
-  summarize(prop = mean(prop))
-
-#tring to get props
 df4 <- df3 %>% 
-group_by(year, district_id) %>%
+  group_by(year, district_id) %>%
   summarise (n = n()) %>%
   mutate(prop = n / sum(n))
 
+<<<<<<< HEAD
+=======
+#tring to get props
+>>>>>>> 1fcfa34f49d8c8b06dd062e5023e4e1aa4eea808
 
 ggplot(df4, aes(as.factor(district_id), prop)) +
   geom_col(aes(fill = as.factor(district_id))) +
@@ -107,7 +103,7 @@ ggplot(df4, aes(as.factor(district_id), prop)) +
 ```
 
 
-
+Limit your data to the following. Note that only rows corresponding to a crime have been retained, and I have counted the number of rows (crimes) for each district in each year. I have stored this data frame in an object called  counts
 ```{r Question 4 Dot Plot }
 
 ```
