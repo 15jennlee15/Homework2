@@ -129,7 +129,7 @@ m <- glm(n ~ I(factor(district_id)) + I(year - 2014),
          data = counts)
 
 #output from model
-tidied <- broom::tidy(m)
+tidi ed <- broom::tidy(m)
 
 #dividing proportions into 20 bins
 ppoints(20)
@@ -159,7 +159,7 @@ ggplot(prob_df, aes(x)) +
        x = "Difference in total number of crimes") +
   theme_minimal() +
   annotate("text", 
-           label = "District 2", 
+           label = "District 4", 
            x = -6500, y = .5, 
            color = "gray40", 
            size = 8) +
