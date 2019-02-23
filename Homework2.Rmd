@@ -21,6 +21,8 @@ library(magrittr)
 library(lubridate)
 library(psych)
 library(stats)
+remotes::install_github("rstudio/gt")
+library(gt)
 
 
 data <- import("https://www.denvergov.org/media/gis/DataCatalog/crime/csv/crime.csv") %>%
@@ -129,7 +131,7 @@ m <- glm(n ~ I(factor(district_id)) + I(year - 2014),
          data = counts)
 
 #output from model
-tidi ed <- broom::tidy(m)
+tidied <- broom::tidy(m)
 
 #dividing proportions into 20 bins
 ppoints(20)
@@ -154,7 +156,7 @@ ggplot(prob_df, aes(x)) +
   scale_y_continuous(breaks = NULL,
                      name = "") +
   labs(title = "Difference in total number of crimes",
-       subtitle = "District 2 Crimes - District 1 Crimes",
+       subtitle = "District 4 Crimes - District 1 Crimes",
        caption = "Each ball represents 5% probability",
        x = "Difference in total number of crimes") +
   theme_minimal() +
@@ -173,6 +175,15 @@ ggplot(prob_df, aes(x)) +
 
 
 ```{r Question 5 Reproduce Table }
+df5 <- df3 %>% 
+  select(-offense_type_id) %>% 
+  filter(district_id == 1 | district_id == 3 | district_id == 5) %>% 
+  filter(offense_category_id == "other-crimes-against-persons"| offense_category_id == "murder" |   offense_category_id == "sexual-assault"| offense_category_id == "aggravated-assault")
+
+summary_df5 <- df5 %>% 
+  group_by(year, district_id, offense_category_id) %>%
+  count(n = n()) %>% 
+  summarize(n = sum(n))
 
 ```
 
