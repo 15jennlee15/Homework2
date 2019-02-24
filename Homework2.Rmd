@@ -28,7 +28,7 @@ library(gt)
 data <- import("https://www.denvergov.org/media/gis/DataCatalog/crime/csv/crime.csv") %>%
   janitor::clean_names()
 
-#glimpse(data)
+glimpse(data)
 
 ```
 
@@ -193,10 +193,11 @@ summary_df5 %>%
               columns = vars(`2014`, `2015`, `2016`, `2017`, `2017`, `2018`, `2019`)) %>% 
   cols_label(offense_category_id = "Offense") %>% 
   tab_header(title = "Crimes Against Persons in Denver: 2014 to Present",
-             subtitle = "*Sample of three districts*") %>% 
+             subtitle = "Sample of three districts") %>% 
   tab_source_note(source_note = md("Denver Crime Data Distributed via [Kaggle](https://www.kaggle.com/paultimothymooney/denver-crime-data)"))
 
-#things to work on: italicize sample of three districts, order of offense, district names, offense names. 
+tab_source_note(source_note = md("Data from [fivethirtyeight](https://fivethirtyeight.com/features/airplane-etiquette-recline-seat/)"))
+ 
 
 ```
 
