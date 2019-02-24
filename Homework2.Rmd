@@ -21,7 +21,7 @@ library(magrittr)
 library(lubridate)
 library(psych)
 library(stats)
-remotes::install_github("rstudio/gt")
+#remotes::install_github("rstudio/gt")
 library(gt)
 
 
@@ -180,10 +180,24 @@ df5 <- df3 %>%
   filter(district_id == 1 | district_id == 3 | district_id == 5) %>% 
   filter(offense_category_id == "other-crimes-against-persons"| offense_category_id == "murder" |   offense_category_id == "sexual-assault"| offense_category_id == "aggravated-assault")
 
+#prepare data for table format 
 summary_df5 <- df5 %>% 
   group_by(year, district_id, offense_category_id) %>%
   count(n = n()) %>% 
-  summarize(n = sum(n))
+  summarize(n = sum(n)) %>% 
+  spread(year, n)
+
+summary_df5 %>%
+  gt() %>% 
+  tab_spanner(label = "Year",
+              columns = vars(`2014`, `2015`, `2016`, `2017`, `2017`, `2018`, `2019`)) %>% 
+  cols_label(offense_category_id = "Offense") %>% 
+  tab_header(title = "Crimes Against Persons in Denver: 2014 to Present",
+             subtitle = "Sample of three districts") %>% 
+  tab_source_note(source_note = md("Denver Crime Data Distributed via [Kaggle](https://www.kaggle.com/paultimothymooney/denver-crime-data)"))
+
+tab_source_note(source_note = md("Data from [fivethirtyeight](https://fivethirtyeight.com/features/airplane-etiquette-recline-seat/)"))
+ 
 
 ```
 
