@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 library(gghighlight)
 library(tidyverse)
+library(dplyr)
 library(rio)
 library(here)
 library(ggrepel)
@@ -21,7 +22,11 @@ library(magrittr)
 library(lubridate)
 library(psych)
 library(stats)
+library(devtools)
+#install.packages("dplyr")
 #remotes::install_github("rstudio/gt")
+#devtools::install_github("wilkelab/ungeviz")
+library(ungeviz)
 library(gt)
 
 
@@ -76,7 +81,18 @@ crime_percent %>%
 
 
 ```{r Question 2 Same Relationship Different Uncertainty Visualization}
-
+#Can't get the density stripes to look right, not sure if it's something wrong with my std. error or what
+crime_percent %>%
+ ggplot(aes(fct_reorder(offense_category_id, Percent), Percent)) +
+  stat_confidence_density(aes(moe = prop_se), fill = "#4375D3", height = 0.6) +
+  geom_point(color = "cornflower blue") +
+  coord_flip() +
+  theme_minimal() +
+  #scale_y_continuous(labels = scales::percent, limits = c(NA, .3)) +
+  labs(x = "",
+       title = "Crimes in Denver",
+       caption = "Denver Crime Data Distributed via Kaggle
+       https://www.kaggle.com/paultimothymooney/denver-crime-data")
 
 
 ```
