@@ -36,12 +36,25 @@ glimpse(data)
 
 
 ```{r Question 1 Replicate Plot}
-
-#Things I Can't Figure out:  I can't figure out how to clean up the names of the offense categories easily.
 #Not sure why his graph doesn't have traffic accidents
 
+data_cleaned <- data %>%
+  mutate(offense_category_id = str_to_title(offense_category_id)) %>%
+  mutate(offense_category_id = recode(offense_category_id, 
+                                      "Aggravated-Assault" = "Aggravated Assault",
+                                      "All-Other-Crimes" = "All Other Crimes",
+                                      "Auto-Theft" = "Auto Theft",
+                                      "Drug-Alcohol" = "Drug Alcohol",
+                                      "Other-Crimes-Against-Persons" = "Other Crimes Against Persons",
+                                      "Public-Disorder" = "Public Disorder",
+                                      "Sexual-Assault" = "Sexual Assault",
+                                      "Theft-From-Motor-Vehicle" = "Theft From Motor Vehicle",
+                                      "Traffic-Accident" = "Traffic Accident",
+                                      "White-Collar-Crime" = "White Collar Crime")) %>%
+  filter(offense_category_id != "Traffic Accident", is_crime == '1')
 
-crime_percent <- data %>%
+
+crime_percent <- data_cleaned %>%
   count(offense_category_id) %>%
   mutate(Percent = (n/sum(n)),
          prop_se = (sqrt((Percent*(1-Percent)) / n))) 
