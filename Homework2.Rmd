@@ -237,7 +237,7 @@ summary_df5 %>%
              subtitle = "Sample of three districts") %>% 
   tab_source_note(source_note = md("Denver Crime Data Distributed via [Kaggle](https://www.kaggle.com/paultimothymooney/denver-crime-data)"))
 
-tab_source_note(summary_df5, source_note = md("Data from [fivethirtyeight](https://fivethirtyeight.com/features/airplane-etiquette-recline-seat/)"))
+
  
 
 ```
