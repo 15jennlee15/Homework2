@@ -20,7 +20,7 @@ library(here)
 library(ggrepel)
 library(magrittr)
 library(lubridate)
-library(psych)
+#library(psych)
 library(stats)
 library(devtools)
 #install.packages("dplyr")
@@ -207,7 +207,19 @@ ggplot(prob_df, aes(x)) +
 df5 <- df3 %>% 
   select(-offense_type_id) %>% 
   filter(district_id == 1 | district_id == 3 | district_id == 5) %>% 
-  filter(offense_category_id == "other-crimes-against-persons"| offense_category_id == "murder" |   offense_category_id == "sexual-assault"| offense_category_id == "aggravated-assault")
+  filter(offense_category_id == "other-crimes-against-persons"| offense_category_id == "murder" |   offense_category_id == "sexual-assault"| offense_category_id == "aggravated-assault") %>%
+  mutate(offense_category_id = str_to_title(offense_category_id)) %>%
+  mutate(offense_category_id = recode(offense_category_id, 
+                                      "Aggravated-Assault" = "Aggravated Assault",
+                                      "All-Other-Crimes" = "All Other Crimes",
+                                      "Auto-Theft" = "Auto Theft",
+                                      "Drug-Alcohol" = "Drug Alcohol",
+                                      "Other-Crimes-Against-Persons" = "Other Crimes Against Persons",
+                                      "Public-Disorder" = "Public Disorder",
+                                      "Sexual-Assault" = "Sexual Assault",
+                                      "Theft-From-Motor-Vehicle" = "Theft From Motor Vehicle",
+                                      "Traffic-Accident" = "Traffic Accident",
+                                      "White-Collar-Crime" = "White Collar Crime"))
 
 #prepare data for table format 
 summary_df5 <- df5 %>% 
