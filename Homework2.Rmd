@@ -71,7 +71,7 @@ crime_percent %>%
   geom_point(color = "cornflower blue") +
   coord_flip() +
   theme_minimal() +
-  scale_y_continuous(labels = scales::percent, limits = c(NA, .3)) +
+  scale_y_continuous(labels = scales::percent, limits = c(-0.005, .3)) +
   labs(x = "",
        title = "Crimes in Denver",
        caption = "Denver Crime Data Distributed via Kaggle
@@ -81,14 +81,16 @@ crime_percent %>%
 
 
 ```{r Question 2 Same Relationship Different Uncertainty Visualization}
-#Can't get the density stripes to look right, not sure if it's something wrong with my std. error or what
+
 crime_percent %>%
- ggplot(aes(fct_reorder(offense_category_id, Percent), Percent)) +
-  stat_confidence_density(aes(moe = prop_se), fill = "#4375D3", height = 0.6) +
-  geom_point(color = "cornflower blue") +
-  coord_flip() +
+ ggplot(aes(Percent, fct_reorder(offense_category_id, Percent))) +
+  stat_confidence_density(aes(moe = prop_se), 
+                          fill = "#4375D3", 
+                          height = 0.6,
+                          confidence = 0.68) +
+  geom_point() +
   theme_minimal() +
-  #scale_y_continuous(labels = scales::percent, limits = c(NA, .3)) +
+  scale_x_continuous(labels = scales::percent, limits = c(-0.005, .3)) +
   labs(x = "",
        title = "Crimes in Denver",
        caption = "Denver Crime Data Distributed via Kaggle
