@@ -14,14 +14,19 @@ knitr::opts_chunk$set(echo = TRUE,
 
 library(gghighlight)
 library(tidyverse)
+library(dplyr)
 library(rio)
 library(here)
 library(ggrepel)
 library(magrittr)
 library(lubridate)
-library(psych)
+#library(psych)
 library(stats)
+library(devtools)
+#install.packages("dplyr")
 #remotes::install_github("rstudio/gt")
+#devtools::install_github("wilkelab/ungeviz")
+library(ungeviz)
 library(gt)
 
 
@@ -36,12 +41,25 @@ glimpse(data)
 
 
 ```{r Question 1 Replicate Plot}
-
-#Things I Can't Figure out:  I can't figure out how to clean up the names of the offense categories easily.
 #Not sure why his graph doesn't have traffic accidents
 
+data_cleaned <- data %>%
+  mutate(offense_category_id = str_to_title(offense_category_id)) %>%
+  mutate(offense_category_id = recode(offense_category_id, 
+                                      "Aggravated-Assault" = "Aggravated Assault",
+                                      "All-Other-Crimes" = "All Other Crimes",
+                                      "Auto-Theft" = "Auto Theft",
+                                      "Drug-Alcohol" = "Drug Alcohol",
+                                      "Other-Crimes-Against-Persons" = "Other Crimes Against Persons",
+                                      "Public-Disorder" = "Public Disorder",
+                                      "Sexual-Assault" = "Sexual Assault",
+                                      "Theft-From-Motor-Vehicle" = "Theft From Motor Vehicle",
+                                      "Traffic-Accident" = "Traffic Accident",
+                                      "White-Collar-Crime" = "White Collar Crime")) %>%
+  filter(offense_category_id != "Traffic Accident", is_crime == '1')
 
-crime_percent <- data %>%
+
+crime_percent <- data_cleaned %>%
   count(offense_category_id) %>%
   mutate(Percent = (n/sum(n)),
          prop_se = (sqrt((Percent*(1-Percent)) / n))) 
@@ -53,7 +71,7 @@ crime_percent %>%
   geom_point(color = "cornflower blue") +
   coord_flip() +
   theme_minimal() +
-  scale_y_continuous(labels = scales::percent, limits = c(NA, .3)) +
+  scale_y_continuous(labels = scales::percent, limits = c(-0.005, .3)) +
   labs(x = "",
        title = "Crimes in Denver",
        caption = "Denver Crime Data Distributed via Kaggle
@@ -64,6 +82,19 @@ crime_percent %>%
 
 ```{r Question 2 Same Relationship Different Uncertainty Visualization}
 
+crime_percent %>%
+ ggplot(aes(Percent, fct_reorder(offense_category_id, Percent))) +
+  stat_confidence_density(aes(moe = prop_se), 
+                          fill = "#4375D3", 
+                          height = 0.6,
+                          confidence = 0.68) +
+  geom_point() +
+  theme_minimal() +
+  scale_x_continuous(labels = scales::percent, limits = c(-0.005, .3)) +
+  labs(x = "",
+       title = "Crimes in Denver",
+       caption = "Denver Crime Data Distributed via Kaggle
+       https://www.kaggle.com/paultimothymooney/denver-crime-data")
 
 
 ```
@@ -178,7 +209,19 @@ ggplot(prob_df, aes(x)) +
 df5 <- df3 %>% 
   select(-offense_type_id) %>% 
   filter(district_id == 1 | district_id == 3 | district_id == 5) %>% 
-  filter(offense_category_id == "other-crimes-against-persons"| offense_category_id == "murder" |   offense_category_id == "sexual-assault"| offense_category_id == "aggravated-assault")
+  filter(offense_category_id == "other-crimes-against-persons"| offense_category_id == "murder" |   offense_category_id == "sexual-assault"| offense_category_id == "aggravated-assault") %>%
+  mutate(offense_category_id = str_to_title(offense_category_id)) %>%
+  mutate(offense_category_id = recode(offense_category_id, 
+                                      "Aggravated-Assault" = "Aggravated Assault",
+                                      "All-Other-Crimes" = "All Other Crimes",
+                                      "Auto-Theft" = "Auto Theft",
+                                      "Drug-Alcohol" = "Drug Alcohol",
+                                      "Other-Crimes-Against-Persons" = "Other Crimes Against Persons",
+                                      "Public-Disorder" = "Public Disorder",
+                                      "Sexual-Assault" = "Sexual Assault",
+                                      "Theft-From-Motor-Vehicle" = "Theft From Motor Vehicle",
+                                      "Traffic-Accident" = "Traffic Accident",
+                                      "White-Collar-Crime" = "White Collar Crime"))
 
 #prepare data for table format 
 summary_df5 <- df5 %>% 
@@ -196,7 +239,7 @@ summary_df5 %>%
              subtitle = "Sample of three districts") %>% 
   tab_source_note(source_note = md("Denver Crime Data Distributed via [Kaggle](https://www.kaggle.com/paultimothymooney/denver-crime-data)"))
 
-tab_source_note(source_note = md("Data from [fivethirtyeight](https://fivethirtyeight.com/features/airplane-etiquette-recline-seat/)"))
+
  
 
 ```
