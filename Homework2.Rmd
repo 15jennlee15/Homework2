@@ -227,7 +227,9 @@ summary_df5 <- df5 %>%
   group_by(year, district_id, offense_category_id) %>%
   count(n = n()) %>% 
   summarize(n = sum(n)) %>% 
-  spread(year, n) 
+  spread(year, n) %>% 
+  mutate(offense_category_id = as.factor(offense_category_id)) %>% 
+  mutate(offense_category_id = fct_relevel(offense_category_id, "Aggravated Assault", "Sexual Assault", "Murder", "Other Crimes Against Persons"))
 
 summary_df5 %>%
   gt() %>% 
