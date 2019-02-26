@@ -28,6 +28,7 @@ library(devtools)
 #devtools::install_github("wilkelab/ungeviz")
 library(ungeviz)
 library(gt)
+library(data.table)
 
 
 data <- import("https://www.denvergov.org/media/gis/DataCatalog/crime/csv/crime.csv") %>%
@@ -231,6 +232,11 @@ summary_df5 <- df5 %>%
   mutate(offense_category_id = as.factor(offense_category_id)) %>% 
   mutate(offense_category_id = fct_relevel(offense_category_id, "Aggravated Assault", "Sexual Assault", "Murder", "Other Crimes Against Persons"))
 
+setattr(summary_df5$offense_category_id,"levels", c("Aggravated Assault",
+                                             "Other Crimes Against Persons",
+                                             "Sexual Assault",
+                                             "Murder"))
+
 summary_df5 %>%
   gt() %>% 
   tab_spanner(label = "Year",
@@ -240,11 +246,6 @@ summary_df5 %>%
              subtitle = (md("*Sample of three districts*"))) %>% 
   tab_source_note(source_note = md("Denver Crime Data Distributed via [Kaggle](https://www.kaggle.com/paultimothymooney/denver-crime-data)")) %>% 
   cols_align(align = "left", columns = vars(offense_category_id))
-  
-
-  
-# need to italize subtitle (* not working) and reorder offenses
- 
 
 ```
 
