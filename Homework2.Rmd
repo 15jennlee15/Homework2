@@ -210,25 +210,24 @@ df5 <- df3 %>%
   select(-offense_type_id) %>% 
   filter(district_id == 1 | district_id == 3 | district_id == 5) %>% 
   filter(offense_category_id == "other-crimes-against-persons"| offense_category_id == "murder" |   offense_category_id == "sexual-assault"| offense_category_id == "aggravated-assault") %>%
+  mutate(offense_category_id = fct_relevel(offense_category_id, "aggravated-assault", "sexual-assault", "murder", "other-crimes-against-persons"))%>% 
   mutate(offense_category_id = str_to_title(offense_category_id)) %>%
   mutate(offense_category_id = recode(offense_category_id, 
                                       "Aggravated-Assault" = "Aggravated Assault",
-                                      "All-Other-Crimes" = "All Other Crimes",
-                                      "Auto-Theft" = "Auto Theft",
-                                      "Drug-Alcohol" = "Drug Alcohol",
-                                      "Other-Crimes-Against-Persons" = "Other Crimes Against Persons",
-                                      "Public-Disorder" = "Public Disorder",
                                       "Sexual-Assault" = "Sexual Assault",
-                                      "Theft-From-Motor-Vehicle" = "Theft From Motor Vehicle",
-                                      "Traffic-Accident" = "Traffic Accident",
-                                      "White-Collar-Crime" = "White Collar Crime"))
+                                      "Other-Crimes-Against-Persons" = "Other Crimes Against Persons")) %>% 
+  mutate(district_id = str_to_title(district_id)) %>% 
+  mutate(district_id = recode(district_id,
+                              "1" = "District 1",
+                              "3" = "District 3",
+                              "5" = "District 5"))
 
 #prepare data for table format 
 summary_df5 <- df5 %>% 
   group_by(year, district_id, offense_category_id) %>%
   count(n = n()) %>% 
   summarize(n = sum(n)) %>% 
-  spread(year, n)
+  spread(year, n) 
 
 summary_df5 %>%
   gt() %>% 
@@ -236,10 +235,12 @@ summary_df5 %>%
               columns = vars(`2014`, `2015`, `2016`, `2017`, `2017`, `2018`, `2019`)) %>% 
   cols_label(offense_category_id = "Offense") %>% 
   tab_header(title = "Crimes Against Persons in Denver: 2014 to Present",
-             subtitle = "Sample of three districts") %>% 
+             subtitle = "*Sample of three districts*") %>% 
   tab_source_note(source_note = md("Denver Crime Data Distributed via [Kaggle](https://www.kaggle.com/paultimothymooney/denver-crime-data)"))
+  
 
-
+  
+# need to italize subtitle (* not working) and reorder offenses
  
 
 ```
